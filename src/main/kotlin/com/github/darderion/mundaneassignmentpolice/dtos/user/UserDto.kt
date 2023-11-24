@@ -7,14 +7,12 @@ data class UserDto (
         val id: Long,
         val name: String,
         val email: String,
-        val subscriptionId: Int,
-        val presets: List<PresetDto>
+        val subscriptionId: Int
 ) {
         constructor(user: UserEntity): this(
                 user.id.value,
                 user.name,
                 user.email,
-                user.subscription.id.value,
-                user.presets.map { PresetDto(it) }
+                user.subscription.id.value
         )
 }

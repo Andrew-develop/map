@@ -5,7 +5,7 @@ import com.github.darderion.mundaneassignmentpolice.dtos.review.ReviewRequest
 import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.ReviewEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
-import com.github.darderion.mundaneassignmentpolice.models.tables.UsersPresetsTable
+import com.github.darderion.mundaneassignmentpolice.models.tables.ReviewsTable
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 
@@ -23,7 +23,7 @@ class ReviewRepositoryImpl: ReviewRepository {
         ReviewEntity.forIds(ids).toList().map { ReviewDto(it) }
     }
     override fun findByUser(id: Long): List<ReviewDto> = transaction {
-        ReviewEntity.find { UsersPresetsTable.userId eq id }.toList().map { ReviewDto(it) }
+        ReviewEntity.find { ReviewsTable.userId eq id }.toList().map { ReviewDto(it) }
     }
 
     override fun findById(id: Long): ReviewDto? = transaction {

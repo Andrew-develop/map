@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service
 class PresetService (
     private val presetRepository: PresetRepository
 ) {
-    fun getBasePresets(): List<PresetDto> {
-        return presetRepository.findByIds(listOf(1,2,3))
-    }
     fun getUserPresets(user: UserDto): ResponseEntity<*> {
         return ResponseEntity.ok(PresetResponse(presetRepository.findByUser(user.id)))
     }
@@ -26,14 +23,14 @@ class PresetService (
     }
 
     fun updatePreset(preset: PresetRequest, presetId: Long, user: UserDto): ResponseEntity<*> {
-        if (user.presets.firstOrNull { it.id == presetId } == null) {
+        if (presetRepository.findByUser(user.id).firstOrNull { it.id == presetId } == null) {
             return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have preset"), HttpStatus.BAD_REQUEST)
         }
         return ResponseEntity.ok(presetRepository.update(preset, presetId))
     }
 
     fun deletePresetBy(id: Long, user: UserDto): ResponseEntity<*> {
-        if (user.presets.firstOrNull { it.id == id } == null) {
+        if (presetRepository.findByUser(user.id).firstOrNull { it.id == id } == null) {
             return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have preset"), HttpStatus.BAD_REQUEST)
         }
         return ResponseEntity.ok(presetRepository.delete(id))

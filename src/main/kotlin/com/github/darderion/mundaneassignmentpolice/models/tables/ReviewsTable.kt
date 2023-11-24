@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
 
 object ReviewsTable : LongIdTable("reviews") {
-    val filepath = varchar("name", 80)
+    val filepath = varchar("filepath", 80)
     val revDate = timestamp("rev_date")
 
     val userId = reference("user_id", UsersTable)

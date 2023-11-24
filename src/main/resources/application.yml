@@ -4,7 +4,7 @@ server:
 #    context-path: /api
 jwt:
   secret: 8w475hg8w47hg457h98754hg8w3127hwo358hg
-  lifetime: 180000
+  lifetime: 1800000
 spring:
   servlet:
     multipart:

@@ -14,16 +14,16 @@ create table users_presets (
   user_id               bigint not null,
   preset_id             bigint not null,
   primary key (user_id, preset_id),
-  foreign key (user_id) references users (id),
-  foreign key (preset_id) references presets (id)
+  foreign key (user_id) references users (id) on delete cascade,
+  foreign key (preset_id) references presets (id) on delete cascade
 );
 
 create table presets_rules (
   preset_id             bigint not null,
   rule_id               int not null,
   primary key (preset_id, rule_id),
-  foreign key (preset_id) references presets (id),
-  foreign key (rule_id) references rules (id)
+  foreign key (preset_id) references presets (id) on delete cascade,
+  foreign key (rule_id) references rules (id) on delete cascade
 );
 
 insert into rules (name)

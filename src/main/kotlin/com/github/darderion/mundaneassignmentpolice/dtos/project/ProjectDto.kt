@@ -5,12 +5,10 @@ import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntit
 
 data class ProjectDto(
         val id: Long,
-        val name: String,
-        val userId: Long
+        val name: String
 ) {
         constructor(project: ProjectEntity): this(
                 project.id.value,
-                project.name,
-                project.user.id.value
+                project.name
         )
 }

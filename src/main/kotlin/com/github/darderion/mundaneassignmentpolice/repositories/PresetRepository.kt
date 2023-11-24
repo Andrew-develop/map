@@ -3,7 +3,6 @@ package com.github.darderion.mundaneassignmentpolice.repositories
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetDto
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetRequest
 import com.github.darderion.mundaneassignmentpolice.models.entities.*
-import com.github.darderion.mundaneassignmentpolice.models.tables.UsersPresetsTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
@@ -23,7 +22,8 @@ class PresetRepositoryImpl: PresetRepository {
         PresetEntity.forIds(ids).toList().map { PresetDto(it) }
     }
     override fun findByUser(id: Long): List<PresetDto> = transaction {
-        PresetEntity.find { UsersPresetsTable.userId eq id }.toList().map { PresetDto(it) }
+        val user = UserEntity.findById(id) ?: throw NoSuchElementException("Error getting user. Statement result is null.")
+        user.presets.map { PresetDto(it) }
     }
 
     override fun findById(id: Long): PresetDto? = transaction {
@@ -35,7 +35,7 @@ class PresetRepositoryImpl: PresetRepository {
         val userEntity = UserEntity.findById(userId) ?: throw NoSuchElementException("Error getting user. Statement result is null.")
 
         PresetEntity.new {
-            this.name = name
+            this.name = preset.name
             this.rules = SizedCollection(ruleEntities)
             this.users = SizedCollection(listOf(userEntity))
         }.let { PresetDto(it) }
