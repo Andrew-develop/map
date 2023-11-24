@@ -3,7 +3,9 @@ package com.github.darderion.mundaneassignmentpolice.services
 import com.github.darderion.mundaneassignmentpolice.dtos.jwt.JwtRequest
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
+import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
 import com.github.darderion.mundaneassignmentpolice.repositories.UserRepository
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -35,7 +37,8 @@ class UserService (
         )
     }
 
-    fun createNewUser(request: UserRequest): JwtRequest {
+    fun createNewUser(request: UserRequest): UserDto? {
+        userRepository.findByEmail(request.email)?.let { return null }
         val processedRequest = UserRequest(
                 request.name,
                 passwordEncoder.encode(request.password),

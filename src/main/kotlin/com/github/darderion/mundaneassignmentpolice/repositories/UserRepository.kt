@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 
 interface UserRepository {
-    fun insert(user: UserRequest): JwtRequest
+    fun insert(user: UserRequest): UserDto
     fun update(user: UserRequest, userId: Long): UserDto
     fun findById(id: Long): UserDto?
     fun findSecurityByEmail(email: String): SecurityUser?
@@ -22,7 +22,7 @@ interface UserRepository {
 
 @Repository
 class UserRepositoryImpl: UserRepository {
-    override fun insert(user: UserRequest): JwtRequest = transaction {
+    override fun insert(user: UserRequest): UserDto = transaction {
         val sub = SubscriptionEntity.findById(1) ?: throw NoSuchElementException("Error getting sub. Statement result is null.")
         val role = RoleEntity.findById(1) ?: throw NoSuchElementException("Error getting role. Statement result is null.")
 
@@ -33,7 +33,7 @@ class UserRepositoryImpl: UserRepository {
             this.subscription = sub
             this.roles = SizedCollection(listOf(role))
             this.presets = SizedCollection()
-        }.let { JwtRequest(it) }
+        }.let { UserDto(it) }
     }
 
     override fun update(user: UserRequest, userId: Long): UserDto = transaction {

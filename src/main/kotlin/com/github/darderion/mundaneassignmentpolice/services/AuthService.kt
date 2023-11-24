@@ -32,7 +32,9 @@ class AuthService (
     }
 
     fun createNewUser(@RequestBody request: UserRequest): ResponseEntity<*> {
-        val user = userService.createNewUser(request)
-        return createAuthToken(JwtRequest(user.email, user.password))
+        userService.createNewUser(request)?.let {
+            return ResponseEntity.ok(it)
+        }
+        return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User already exist"), HttpStatus.BAD_REQUEST)
     }
 }
