@@ -4,27 +4,26 @@ create table rules (
   primary key (id)
 );
 
-create table rule_packs (
-  id                    serial,
-  name                  varchar(80) unique not null,
-  price                 int not null,
+create table presets (
+  id                    bigserial,
+  name                  varchar(80) not null,
   primary key (id)
 );
 
-create table rule_packs_rules (
-  rule_pack_id          int not null,
-  rule_id               int not null,
-  primary key (rule_id),
-  foreign key (rule_pack_id) references rule_packs (id),
-  foreign key (rule_id) references rules (id)
+create table users_presets (
+  user_id               bigint not null,
+  preset_id             bigint not null,
+  primary key (user_id, preset_id),
+  foreign key (user_id) references users (id),
+  foreign key (preset_id) references presets (id)
 );
 
-create table users_rule_packs (
-  user_id               bigint not null,
-  rule_pack_id          int not null,
-  primary key (user_id, rule_pack_id),
-  foreign key (user_id) references users (id),
-  foreign key (rule_pack_id) references rule_packs (id)
+create table presets_rules (
+  preset_id             bigint not null,
+  rule_id               int not null,
+  primary key (preset_id, rule_id),
+  foreign key (preset_id) references presets (id),
+  foreign key (rule_id) references rules (id)
 );
 
 insert into rules (name)
@@ -38,18 +37,3 @@ values
       ('RULE_VARIOUS_ABBREVIATIONS'), ('RULE_SECTIONS_ORDER'), ('RULE_LOW_QUALITY_CONFERENCES'),
        ('RULE_NO_SPACE_AFTER_PUNCTUATION'), ('RULE_SPACE_BEFORE_PUNCTUATION'), ('RULES_SPACE_AROUND_BRACKETS'),
         ('RULES_SMALL_NUMBERS'), ('RULES_SECTION_SIZE');
-
-insert into rule_packs (name, price)
-values
-('Incorrect dashes usage', 0);
-
-insert into rule_packs_rules (rule_pack_id, rule_id)
-values
-(1, 4),
-(1, 5),
-(1, 6);
-
-insert into users_rule_packs (user_id, rule_pack_id)
-values
-(1, 1),
-(2, 1);

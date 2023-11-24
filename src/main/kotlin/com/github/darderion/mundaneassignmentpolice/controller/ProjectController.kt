@@ -22,21 +22,18 @@ class ProjectController (
     @PostMapping("/create")
     fun createPreset(@RequestBody request: ProjectRequest, principal: Principal): ResponseEntity<*> {
         val user = userService.findByEmail(principal.name)
-        projectService.createNewProject(request.name, user)
-        return ResponseEntity.ok("Project has been added")
+        return projectService.createProject(request, user)
     }
 
     @PutMapping("/update/{id}")
     fun updatePreset(@PathVariable id: Long, @RequestBody request: ProjectRequest, principal: Principal): ResponseEntity<*> {
         val user = userService.findByEmail(principal.name)
-        projectService.updateProject(id, request.name, user)
-        return ResponseEntity.ok("Project has been updated")
+        return projectService.updateProject(request, id, user)
     }
 
     @DeleteMapping("/delete/{id}")
     fun deletePreset(@PathVariable id: Long, principal: Principal): ResponseEntity<*> {
         val user = userService.findByEmail(principal.name)
-        projectService.deleteProjectBy(id, user)
-        return ResponseEntity.ok("Project has been deleted")
+        return projectService.deleteProjectBy(id, user)
     }
 }

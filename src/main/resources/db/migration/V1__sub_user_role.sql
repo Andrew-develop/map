@@ -10,8 +10,7 @@ create table subscriptions (
 
 create table users (
   id                    bigserial,
-  firstname             varchar(30) not null,
-  lastname              varchar(30) not null,
+  name                  varchar(30) not null,
   password              varchar(80) not null,
   email                 varchar(50) unique,
   subscription_id       int not null,
@@ -41,10 +40,10 @@ insert into roles (name)
 values
 ('ROLE_USER'), ('ROLE_ADMIN'), ('SOMETHING');
 
-insert into users (firstname, lastname, password, email, subscription_id)
+insert into users (name, password, email, subscription_id)
 values
-('user', 'user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'user@gmail.com', 1),
-('admin', 'admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'admin@gmail.com', 2);
+('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'user@gmail.com', 1),
+('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'admin@gmail.com', 2);
 
 insert into users_roles (user_id, role_id)
 values

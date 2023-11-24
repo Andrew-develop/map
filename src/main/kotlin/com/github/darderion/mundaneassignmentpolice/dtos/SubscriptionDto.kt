@@ -1,21 +1,21 @@
 package com.github.darderion.mundaneassignmentpolice.dtos
 
-import com.github.darderion.mundaneassignmentpolice.entities.Subscription
+import com.github.darderion.mundaneassignmentpolice.models.entities.SubscriptionEntity
 
 data class SubscriptionDto(
-    val id: Long?,
+    val id: Int,
     val name: String,
     val price: Int,
     val projects: Int,
     val revisionsPerDay: Int,
     val presets: Int
 ) {
-    constructor(subscription: Subscription): this(
-        subscription.id,
+    constructor(subscription: SubscriptionEntity): this(
+        subscription.id.value,
         subscription.name,
-        subscription.price,
-        subscription.projects,
-        subscription.revisionsPerDay,
-        subscription.presets
+        0,
+        0,
+        0,
+        0
     )
 }

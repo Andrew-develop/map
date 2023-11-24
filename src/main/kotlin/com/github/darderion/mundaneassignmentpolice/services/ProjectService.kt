@@ -1,56 +1,36 @@
 package com.github.darderion.mundaneassignmentpolice.services
 
-import com.github.darderion.mundaneassignmentpolice.dtos.project.ProjectDto
-import com.github.darderion.mundaneassignmentpolice.entities.Project
-import com.github.darderion.mundaneassignmentpolice.entities.User
+import com.github.darderion.mundaneassignmentpolice.dtos.project.ProjectRequest
+import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
 import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
-import com.github.darderion.mundaneassignmentpolice.exceptions.NotFoundException
 import com.github.darderion.mundaneassignmentpolice.repositories.ProjectRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
 
 @Service
 class ProjectService (
         private val projectRepository: ProjectRepository
 ) {
-    fun getUserProjects(user: User): ResponseEntity<*> {
-        return ResponseEntity.ok(projectRepository.findByUser(user).map {
-            ProjectDto(it)
-        })
+    fun getUserProjects(user: UserDto): ResponseEntity<*> {
+        return ResponseEntity.ok(projectRepository.findByUser(user.id))
     }
 
-    fun createNewProject(name: String, user: User) {
-        val project = Project(
-                name = name,
-                user = user
-        )
-        projectRepository.save(project)
+    fun createProject(projectRequest: ProjectRequest, user: UserDto): ResponseEntity<*> {
+        return ResponseEntity.ok(projectRepository.insert(projectRequest, user.id))
     }
 
-    @Transactional
-    fun updateProject(id: Long, name: String, user: User): ResponseEntity<*> {
-        val project = projectRepository.findById(id).orElseThrow {
-            NotFoundException(String.format("Проекта '%s' не существует", id))
+    fun updateProject(projectRequest: ProjectRequest, id: Long, user: UserDto): ResponseEntity<*> {
+        if (projectRepository.findById(id)?.userId != user.id) {
+            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have project"), HttpStatus.BAD_REQUEST)
         }
-        if (project.user == user) {
-            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "У пользователя нет проекта" + id), HttpStatus.BAD_REQUEST)
-        }
-        project.name = name
-        projectRepository.save(project)
-        return ResponseEntity.ok("preset successfully updated")
+        return ResponseEntity.ok(projectRepository.update(projectRequest, id))
     }
 
-    @Transactional
-    fun deleteProjectBy(id: Long, user: User): ResponseEntity<*> {
-        val project = projectRepository.findById(id).orElseThrow {
-            NotFoundException(String.format("Проекта '%s' не существует", id))
+    fun deleteProjectBy(id: Long, user: UserDto): ResponseEntity<*> {
+        if (projectRepository.findById(id)?.userId != user.id) {
+            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have project"), HttpStatus.BAD_REQUEST)
         }
-        if (project.user == user) {
-            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "У пользователя нет проекта" + id), HttpStatus.BAD_REQUEST)
-        }
-        projectRepository.delete(project)
-        return ResponseEntity.ok("preset successfully deleted")
+        return ResponseEntity.ok(projectRepository.delete(id))
     }
 }
