@@ -1,5 +1,6 @@
 package com.github.darderion.mundaneassignmentpolice.dtos.review
 
+import com.github.darderion.mundaneassignmentpolice.checker.RuleViolation
 import com.github.darderion.mundaneassignmentpolice.models.entities.ReviewEntity
 import java.sql.Timestamp
 

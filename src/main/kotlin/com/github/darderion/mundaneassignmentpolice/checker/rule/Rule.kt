@@ -5,7 +5,7 @@ import com.github.darderion.mundaneassignmentpolice.checker.RuleViolationType
 import com.github.darderion.mundaneassignmentpolice.pdfdocument.PDFDocument
 import com.github.darderion.mundaneassignmentpolice.pdfdocument.PDFRegion
 
-abstract class Rule(
+public abstract class Rule(
 	val area: PDFRegion,
 	val name: String,
 	val type: RuleViolationType
