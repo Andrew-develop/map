@@ -1,13 +1,12 @@
 package com.github.darderion.mundaneassignmentpolice.dtos.review
 
-import com.github.darderion.mundaneassignmentpolice.checker.RuleViolation
 import com.github.darderion.mundaneassignmentpolice.models.entities.ReviewEntity
-import java.sql.Timestamp
+import java.time.Instant
 
 data class ReviewDto(
         var id: Long,
         val filepath: String,
-        val revDate: Timestamp,
+        val revDate: Instant,
         val presetId: Long,
         val userId: Long,
         val projectId: Long?
@@ -15,7 +14,7 @@ data class ReviewDto(
     constructor(review: ReviewEntity): this(
             review.id.value,
             review.filepath,
-            Timestamp.from(review.revDate),
+            review.revDate,
             review.preset.id.value,
             review.user.id.value,
             review.project?.id?.value

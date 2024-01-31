@@ -13,10 +13,12 @@ import org.springframework.stereotype.Repository
 interface UserRepository {
     fun insert(user: UserRequest): UserDto
     fun update(user: UserRequest, userId: Long): UserDto
+    fun confirm(id: Long): UserDto?
     fun findById(id: Long): UserDto?
     fun findSecurityByEmail(email: String): SecurityUser?
     fun findByEmail(email: String): UserDto?
     fun updateSubscription(subId: Int, userId: Long): UserDto
+    fun resetPassword(id: Long, password: String): UserDto
     fun delete(id: Long): Unit
 }
 
@@ -45,6 +47,16 @@ class UserRepositoryImpl: UserRepository {
 
         UserDto(userEntity)
     }
+
+    override fun confirm(id: Long): UserDto? = transaction {
+        val role = RoleEntity.findById(2) ?: throw NoSuchElementException("Error getting role. Statement result is null.")
+        val user = UserEntity.findById(id) ?: throw NoSuchElementException("Error getting user. Statement result is null.")
+
+        user.roles = SizedCollection(listOf(role))
+
+        UserDto(user)
+    }
+
     override fun findById(id: Long): UserDto? = transaction {
         UserEntity.findById(id)?.let { UserDto(it) }
     }
@@ -55,6 +67,14 @@ class UserRepositoryImpl: UserRepository {
 
     override fun findSecurityByEmail(email: String): SecurityUser? = transaction {
         UserEntity.find { UsersTable.email eq email }.firstOrNull()?.let { SecurityUser(it) }
+    }
+
+    override fun resetPassword(id: Long, password: String): UserDto = transaction {
+        val user = UserEntity.findById(id) ?: throw NoSuchElementException("Error getting user. Statement result is null.")
+
+        user.password = password
+
+        UserDto(user)
     }
 
     override fun updateSubscription(subId: Int, userId: Long): UserDto = transaction {

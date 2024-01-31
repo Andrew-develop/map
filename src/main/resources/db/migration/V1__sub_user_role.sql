@@ -1,6 +1,6 @@
 create table subscriptions (
   id                    serial,
-  name                  varchar(80) not null,
+  name                  varchar(80) unique not null,
   price                 int not null,
   projects              int not null,
   revisions_per_day     int not null,
@@ -12,7 +12,7 @@ create table users (
   id                    bigserial,
   name                  varchar(30) not null,
   password              varchar(80) not null,
-  email                 varchar(50) unique,
+  email                 varchar(50) unique not null,
   subscription_id       int not null,
   primary key (id),
   foreign key (subscription_id) references subscriptions (id)
@@ -20,7 +20,7 @@ create table users (
 
 create table roles (
   id                    serial,
-  name                  varchar(50) not null,
+  name                  varchar(50) unique not null,
   primary key (id)
 );
 
@@ -38,7 +38,7 @@ values
 
 insert into roles (name)
 values
-('ROLE_USER'), ('ROLE_ADMIN'), ('SOMETHING');
+('ROLE_GUEST'), ('ROLE_USER'), ('ROLE_ADMIN'), ('SOMETHING');
 
 insert into users (name, password, email, subscription_id)
 values

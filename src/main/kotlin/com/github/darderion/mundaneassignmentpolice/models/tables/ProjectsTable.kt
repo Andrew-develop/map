@@ -7,6 +7,6 @@ object ProjectsTable : LongIdTable("projects") {
     val userId = reference("user_id", UsersTable)
 
     init {
-        uniqueIndex(name)
+        uniqueIndex(name, userId)
     }
 }

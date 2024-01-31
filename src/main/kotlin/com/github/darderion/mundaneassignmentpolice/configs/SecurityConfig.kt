@@ -35,7 +35,7 @@ class SecurityConfig (
             .authorizeHttpRequests { authz ->
                 authz.antMatchers("/admin").hasRole("ADMIN")
                 authz.antMatchers("/auth/**").permitAll()
-                authz.anyRequest().authenticated()
+//                authz.anyRequest().hasRole("USER")
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,6 +1,6 @@
 package com.github.darderion.mundaneassignmentpolice.services
 
-import com.github.darderion.mundaneassignmentpolice.dtos.jwt.JwtRequest
+import com.github.darderion.mundaneassignmentpolice.dtos.user.SecurityUser
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
 import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
@@ -17,9 +17,10 @@ import java.util.stream.Collectors
 
 @Service
 class UserService (
-        private val userRepository: UserRepository,
-        private val passwordEncoder: BCryptPasswordEncoder
+    private val userRepository: UserRepository,
+    private val passwordEncoder: BCryptPasswordEncoder
 ): UserDetailsService {
+
     fun findByEmail(email: String): UserDto {
         return userRepository.findByEmail(email) ?: throw UsernameNotFoundException(
                 String.format("Пользователь '%s' не найден", email)
@@ -39,12 +40,14 @@ class UserService (
 
     fun createNewUser(request: UserRequest): UserDto? {
         userRepository.findByEmail(request.email)?.let { return null }
-        val processedRequest = UserRequest(
-                request.name,
-                passwordEncoder.encode(request.password),
-                request.email
+        val user = userRepository.insert(
+                UserRequest(
+                        request.name,
+                        passwordEncoder.encode(request.password),
+                        request.email
+                )
         )
-        return userRepository.insert(processedRequest)
+        return user
     }
 
     fun updateUser(request: UserRequest, email: String): ResponseEntity<*> {
@@ -55,6 +58,18 @@ class UserService (
             request.email
         )
         return ResponseEntity.ok(userRepository.update(processedRequest, user.id))
+    }
+
+    fun getIdForResetPassword(email: String): Long? {
+        return userRepository.findByEmail(email)?.let { return it.id }
+    }
+
+    fun resetPassword(userId: Long, password: String): UserDto? {
+        return userRepository.resetPassword(userId, passwordEncoder.encode(password))
+    }
+
+    fun confirm(userId: Long): UserDto? {
+        return userRepository.confirm(userId)
     }
 
     fun applySubscription(subId: Int, email: String): UserDto {

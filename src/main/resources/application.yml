@@ -14,14 +14,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/map
     username: sergioramos4
     password: 221001
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
   flyway:
     locations: classpath:/db/migration
     url: jdbc:postgresql://localhost:5432/map
@@ -30,3 +22,11 @@ spring:
     password: 221001
     connect-retries: 60
     validate-on-migrate: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gmail user name
+    password: your password
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true

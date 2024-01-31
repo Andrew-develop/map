@@ -1,6 +1,5 @@
 package com.github.darderion.mundaneassignmentpolice.dtos.user
 
-import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetDto
 import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 
 data class UserDto (
