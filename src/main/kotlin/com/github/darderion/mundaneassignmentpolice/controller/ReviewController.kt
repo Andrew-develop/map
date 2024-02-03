@@ -3,7 +3,6 @@ package com.github.darderion.mundaneassignmentpolice.controller
 import com.github.darderion.mundaneassignmentpolice.dtos.review.ReviewDto
 import com.github.darderion.mundaneassignmentpolice.dtos.review.ReviewResponse
 import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
-import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntity
 import com.github.darderion.mundaneassignmentpolice.services.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

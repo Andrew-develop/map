@@ -5,8 +5,6 @@ import com.github.darderion.mundaneassignmentpolice.rules.*
 import org.springframework.stereotype.Service
 import com.github.darderion.mundaneassignmentpolice.checker.rule.Rule
 import com.github.darderion.mundaneassignmentpolice.dtos.rule.RuleDto
-import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.RuleEntity
 
 @Service
 class RuleService (

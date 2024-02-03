@@ -1,7 +1,5 @@
 package com.github.darderion.mundaneassignmentpolice.dtos.user
 
-import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
-
 data class UserDto (
         val id: Long,
         val name: String,

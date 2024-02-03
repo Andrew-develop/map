@@ -6,8 +6,6 @@ import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntit
 import com.github.darderion.mundaneassignmentpolice.models.entities.ReviewEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.models.tables.ReviewsTable
-import org.jetbrains.exposed.dao.load
-import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 import java.time.Instant

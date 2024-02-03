@@ -3,9 +3,6 @@ package com.github.darderion.mundaneassignmentpolice.services
 import com.github.darderion.mundaneassignmentpolice.dtos.project.Project
 import com.github.darderion.mundaneassignmentpolice.dtos.project.ProjectRequest
 import com.github.darderion.mundaneassignmentpolice.dtos.user.User
-import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
-import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.repositories.ProjectRepository
 import org.springframework.stereotype.Service
 

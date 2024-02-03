@@ -1,6 +1,5 @@
 package com.github.darderion.mundaneassignmentpolice.controller
 
-import com.github.darderion.mundaneassignmentpolice.dtos.subscription.SubscriptionDto
 import com.github.darderion.mundaneassignmentpolice.dtos.subscription.SubscriptionResponse
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
 import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
@@ -30,7 +29,7 @@ class SubscriptionController (
 
     @PostMapping("/apply/{id}")
     fun applySubscription(@PathVariable id: Int, principal: Principal): ResponseEntity<*> {
-        val sub = subscriptionService.getSubscriptionBy(id)
+        subscriptionService.getSubscriptionBy(id)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Sub don't exist"), HttpStatus.BAD_REQUEST)
         return ResponseEntity.ok(UserDto(userService.applySubscription(id, principal.name)))
     }

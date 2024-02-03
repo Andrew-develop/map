@@ -4,7 +4,6 @@ import com.github.darderion.mundaneassignmentpolice.dtos.user.User
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
 import com.github.darderion.mundaneassignmentpolice.models.entities.*
 import com.github.darderion.mundaneassignmentpolice.models.tables.UsersTable
-import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository

@@ -1,8 +1,6 @@
 package com.github.darderion.mundaneassignmentpolice.controller
 
-import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetDto
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetRequest
-import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetResponse
 import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
 import com.github.darderion.mundaneassignmentpolice.services.PresetService
 import com.github.darderion.mundaneassignmentpolice.services.UserService

@@ -2,18 +2,8 @@ package com.github.darderion.mundaneassignmentpolice.services
 
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetDto
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetRequest
-import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetResponse
 import com.github.darderion.mundaneassignmentpolice.dtos.user.User
-import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
-import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
-import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
-import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.repositories.PresetRepository
-import com.github.darderion.mundaneassignmentpolice.repositories.RuleRepository
-import org.jetbrains.exposed.sql.SizedCollection
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,9 +1,7 @@
 package com.github.darderion.mundaneassignmentpolice.repositories
 
 import com.github.darderion.mundaneassignmentpolice.dtos.subscription.SubscriptionDto
-import com.github.darderion.mundaneassignmentpolice.dtos.user.User
 import com.github.darderion.mundaneassignmentpolice.models.entities.SubscriptionEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.models.tables.SubscriptionsTable
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository

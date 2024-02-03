@@ -1,9 +1,7 @@
 package com.github.darderion.mundaneassignmentpolice.repositories
 
 import com.github.darderion.mundaneassignmentpolice.dtos.rule.RuleDto
-import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.RuleEntity
-import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 

@@ -5,16 +5,9 @@ import com.github.darderion.mundaneassignmentpolice.checker.DocumentReport
 import com.github.darderion.mundaneassignmentpolice.controller.pdfFolder
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetDto
 import com.github.darderion.mundaneassignmentpolice.dtos.project.Project
-import com.github.darderion.mundaneassignmentpolice.dtos.project.ProjectDto
 import com.github.darderion.mundaneassignmentpolice.dtos.review.Review
 import com.github.darderion.mundaneassignmentpolice.dtos.user.User
-import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
-import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.ReviewEntity
-import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.repositories.PresetRepository
-import com.github.darderion.mundaneassignmentpolice.repositories.ProjectRepository
 import com.github.darderion.mundaneassignmentpolice.repositories.ReviewRepository
 import com.github.darderion.mundaneassignmentpolice.rules.RuleSet
 import com.github.darderion.mundaneassignmentpolice.utils.FileUploadUtil

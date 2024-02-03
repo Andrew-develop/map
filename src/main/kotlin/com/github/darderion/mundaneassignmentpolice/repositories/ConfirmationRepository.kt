@@ -4,7 +4,6 @@ import com.github.darderion.mundaneassignmentpolice.dtos.confirmation.Confirmati
 import com.github.darderion.mundaneassignmentpolice.models.entities.ConfirmationEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.models.tables.ConfirmationsTable
-import org.apache.catalina.User
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository

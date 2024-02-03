@@ -4,7 +4,6 @@ import com.github.darderion.mundaneassignmentpolice.dtos.confirmation.Confirmati
 import com.github.darderion.mundaneassignmentpolice.dtos.confirmation.ConfirmationRequest
 import com.github.darderion.mundaneassignmentpolice.dtos.user.User
 import com.github.darderion.mundaneassignmentpolice.repositories.ConfirmationRepository
-import com.github.darderion.mundaneassignmentpolice.repositories.UserRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 
