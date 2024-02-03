@@ -11,5 +11,6 @@ class ConfirmationEntity(id: EntityID<UUID>): UUIDEntity(id) {
 
     var code by ConfirmationsTable.code
     var expiresAt by ConfirmationsTable.expiresAt
+    var token by ConfirmationsTable.token
     var user by UserEntity referencedOn ConfirmationsTable.userId
 }

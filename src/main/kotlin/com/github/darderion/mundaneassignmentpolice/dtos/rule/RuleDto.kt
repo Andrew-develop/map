@@ -1,4 +1,4 @@
-package com.github.darderion.mundaneassignmentpolice.dtos
+package com.github.darderion.mundaneassignmentpolice.dtos.rule
 
 import com.github.darderion.mundaneassignmentpolice.models.entities.RuleEntity
 

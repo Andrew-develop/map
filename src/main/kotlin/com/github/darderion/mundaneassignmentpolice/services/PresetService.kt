@@ -3,9 +3,15 @@ package com.github.darderion.mundaneassignmentpolice.services
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetDto
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetRequest
 import com.github.darderion.mundaneassignmentpolice.dtos.preset.PresetResponse
+import com.github.darderion.mundaneassignmentpolice.dtos.user.User
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
+import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
 import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
+import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
+import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.repositories.PresetRepository
+import com.github.darderion.mundaneassignmentpolice.repositories.RuleRepository
+import org.jetbrains.exposed.sql.SizedCollection
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -14,25 +20,27 @@ import org.springframework.stereotype.Service
 class PresetService (
     private val presetRepository: PresetRepository
 ) {
-    fun getUserPresets(user: UserDto): ResponseEntity<*> {
-        return ResponseEntity.ok(PresetResponse(presetRepository.findByUser(user.id)))
+    fun getPresetBy(id: Long): PresetDto? {
+        return presetRepository.findById(id)
     }
 
-    fun createPreset(preset: PresetRequest, user: UserDto): ResponseEntity<*> {
-        return ResponseEntity.ok(presetRepository.insert(preset, user.id))
+    fun getUserPresets(id: Long): List<PresetDto> {
+        return presetRepository.findByUser(id)
     }
 
-    fun updatePreset(preset: PresetRequest, presetId: Long, user: UserDto): ResponseEntity<*> {
-        if (presetRepository.findByUser(user.id).firstOrNull { it.id == presetId } == null) {
-            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have preset"), HttpStatus.BAD_REQUEST)
-        }
-        return ResponseEntity.ok(presetRepository.update(preset, presetId))
+    fun createPreset(request: PresetRequest, user: User): PresetDto {
+        return presetRepository.insert(request, user.id)
     }
 
-    fun deletePresetBy(id: Long, user: UserDto): ResponseEntity<*> {
-        if (presetRepository.findByUser(user.id).firstOrNull { it.id == id } == null) {
-            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have preset"), HttpStatus.BAD_REQUEST)
-        }
-        return ResponseEntity.ok(presetRepository.delete(id))
+    fun updatePreset(request: PresetRequest, id: Long, user: User): PresetDto? {
+        val preset = presetRepository.findById(id) ?: return null
+        return if (preset.ownerId == user.id)
+            presetRepository.update(request, id) else null
+    }
+
+    fun deletePresetBy(id: Long, user: User): Unit? {
+        val preset = presetRepository.findById(id) ?: return null
+        return if (preset.ownerId == user.id)
+            presetRepository.delete(id) else null
     }
 }

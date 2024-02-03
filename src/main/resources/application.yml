@@ -1,10 +1,10 @@
 server:
   port: 8081
-#  servlet:
-#    context-path: /api
+  servlet:
+    context-path: /api
 jwt:
   secret: 8w475hg8w47hg457h98754hg8w3127hwo358hg
-  lifetime: 1800000
+  lifetime: 3600000
 spring:
   servlet:
     multipart:
@@ -12,21 +12,21 @@ spring:
       max-request-size: 32MB
   datasource:
     url: jdbc:postgresql://localhost:5432/map
-    username: sergioramos4
-    password: 221001
+    username:
+    password:
   flyway:
     locations: classpath:/db/migration
     url: jdbc:postgresql://localhost:5432/map
     schemas: public
-    user: sergioramos4
-    password: 221001
+    user:
+    password:
     connect-retries: 60
     validate-on-migrate: true
   mail:
     host: smtp.gmail.com
     port: 587
-    username: gmail user name
-    password: your password
+    username:
+    password:
     properties.mail.smtp:
       auth: true
       starttls.enable: true

@@ -1,37 +1,39 @@
 package com.github.darderion.mundaneassignmentpolice.services
 
+import com.github.darderion.mundaneassignmentpolice.dtos.project.Project
 import com.github.darderion.mundaneassignmentpolice.dtos.project.ProjectRequest
-import com.github.darderion.mundaneassignmentpolice.dtos.project.ProjectResponse
+import com.github.darderion.mundaneassignmentpolice.dtos.user.User
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
-import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
+import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntity
+import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.repositories.ProjectRepository
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class ProjectService (
         private val projectRepository: ProjectRepository
 ) {
-    fun getUserProjects(user: UserDto): ResponseEntity<*> {
-        return ResponseEntity.ok(ProjectResponse(projectRepository.findByUser(user.id)))
+    fun getProjectBy(id: Long): Project? {
+        return projectRepository.findById(id)
     }
 
-    fun createProject(projectRequest: ProjectRequest, user: UserDto): ResponseEntity<*> {
-        return ResponseEntity.ok(projectRepository.insert(projectRequest, user.id))
+    fun getUserProjects(user: User): List<Project> {
+        return projectRepository.findByUser(user.id)
     }
 
-    fun updateProject(projectRequest: ProjectRequest, id: Long, user: UserDto): ResponseEntity<*> {
-        if (projectRepository.findByUser(user.id).firstOrNull { it.id == id } == null) {
-            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have project"), HttpStatus.BAD_REQUEST)
-        }
-        return ResponseEntity.ok(projectRepository.update(projectRequest, id))
+    fun createProject(projectRequest: ProjectRequest, user: User): Project {
+        return projectRepository.insert(projectRequest, user.id)
     }
 
-    fun deleteProjectBy(id: Long, user: UserDto): ResponseEntity<*> {
-        if (projectRepository.findByUser(user.id).firstOrNull { it.id == id } == null) {
-            return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User don't have project"), HttpStatus.BAD_REQUEST)
-        }
-        return ResponseEntity.ok(projectRepository.delete(id))
+    fun updateProject(request: ProjectRequest, id: Long, user: User): Project? {
+        val project = projectRepository.findById(id) ?: return null
+        return if (project.userId == user.id)
+            projectRepository.update(request, id) else null
+    }
+
+    fun deleteProjectBy(id: Long, user: User): Unit? {
+        val project = projectRepository.findById(id) ?: return null
+        return if (project.userId == user.id)
+            projectRepository.delete(id) else null
     }
 }

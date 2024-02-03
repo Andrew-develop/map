@@ -1,7 +1,12 @@
 package com.github.darderion.mundaneassignmentpolice.controller
 
+import com.github.darderion.mundaneassignmentpolice.dtos.subscription.SubscriptionDto
+import com.github.darderion.mundaneassignmentpolice.dtos.subscription.SubscriptionResponse
+import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
+import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
 import com.github.darderion.mundaneassignmentpolice.services.SubscriptionService
 import com.github.darderion.mundaneassignmentpolice.services.UserService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
@@ -20,12 +25,13 @@ class SubscriptionController (
 
     @GetMapping("/all")
     fun getAllSubscriptions(): ResponseEntity<*> {
-        return ResponseEntity.ok(subscriptionService.getAllSubscriptions())
+        return ResponseEntity.ok(SubscriptionResponse(subscriptionService.getAllSubscriptions()))
     }
 
     @PostMapping("/apply/{id}")
     fun applySubscription(@PathVariable id: Int, principal: Principal): ResponseEntity<*> {
         val sub = subscriptionService.getSubscriptionBy(id)
-        return ResponseEntity.ok(userService.applySubscription(sub.id, principal.name))
+                ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Sub don't exist"), HttpStatus.BAD_REQUEST)
+        return ResponseEntity.ok(UserDto(userService.applySubscription(id, principal.name)))
     }
 }

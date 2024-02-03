@@ -7,8 +7,8 @@ data class ProjectDto(
         val id: Long,
         val name: String
 ) {
-        constructor(project: ProjectEntity): this(
-                project.id.value,
+        constructor(project: Project): this(
+                project.id,
                 project.name
         )
 }

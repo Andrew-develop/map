@@ -1,5 +1,6 @@
 package com.github.darderion.mundaneassignmentpolice.controller
 
+import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
 import com.github.darderion.mundaneassignmentpolice.services.UserService
 import org.springframework.http.ResponseEntity
@@ -13,11 +14,11 @@ class UserController (
 ) {
     @GetMapping("/info")
     fun getUserInfo(principal: Principal): ResponseEntity<*> {
-        return ResponseEntity.ok(userService.findByEmail(principal.name))
+        return ResponseEntity.ok(UserDto(userService.findByEmail(principal.name)))
     }
 
     @PutMapping("/update")
     fun updateUser(@RequestBody request: UserRequest, principal: Principal): ResponseEntity<*> {
-        return userService.updateUser(request, principal.name)
+        return ResponseEntity.ok(UserDto(userService.updateUser(request, principal.name)))
     }
 }

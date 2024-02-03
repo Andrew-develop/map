@@ -1,12 +1,8 @@
 package com.github.darderion.mundaneassignmentpolice.services
 
-import com.github.darderion.mundaneassignmentpolice.dtos.user.SecurityUser
-import com.github.darderion.mundaneassignmentpolice.dtos.user.UserDto
+import com.github.darderion.mundaneassignmentpolice.dtos.user.User
 import com.github.darderion.mundaneassignmentpolice.dtos.user.UserRequest
-import com.github.darderion.mundaneassignmentpolice.exceptions.AppError
 import com.github.darderion.mundaneassignmentpolice.repositories.UserRepository
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -21,14 +17,14 @@ class UserService (
     private val passwordEncoder: BCryptPasswordEncoder
 ): UserDetailsService {
 
-    fun findByEmail(email: String): UserDto {
+    fun findByEmail(email: String): User {
         return userRepository.findByEmail(email) ?: throw UsernameNotFoundException(
                 String.format("Пользователь '%s' не найден", email)
         )
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findSecurityByEmail(username) ?: throw UsernameNotFoundException(
+        val user = userRepository.findByEmail(username) ?: throw UsernameNotFoundException(
                 String.format("Пользователь '%s' не найден", username)
         )
         return org.springframework.security.core.userdetails.User (
@@ -38,42 +34,41 @@ class UserService (
         )
     }
 
-    fun createNewUser(request: UserRequest): UserDto? {
+    fun findForReset(email: String): User? {
+        return userRepository.findByEmail(email)
+    }
+
+    fun createNewUser(request: UserRequest): User? {
         userRepository.findByEmail(request.email)?.let { return null }
-        val user = userRepository.insert(
+        return userRepository.insert(
                 UserRequest(
                         request.name,
                         passwordEncoder.encode(request.password),
                         request.email
                 )
         )
-        return user
     }
 
-    fun updateUser(request: UserRequest, email: String): ResponseEntity<*> {
+    fun updateUser(request: UserRequest, email: String): User {
         val user = findByEmail(email)
         val processedRequest = UserRequest(
             request.name,
             passwordEncoder.encode(request.password),
             request.email
         )
-        return ResponseEntity.ok(userRepository.update(processedRequest, user.id))
+        return userRepository.update(processedRequest, user.id)
     }
 
-    fun getIdForResetPassword(email: String): Long? {
-        return userRepository.findByEmail(email)?.let { return it.id }
-    }
-
-    fun resetPassword(userId: Long, password: String): UserDto? {
+    fun resetPassword(userId: Long, password: String): User {
         return userRepository.resetPassword(userId, passwordEncoder.encode(password))
     }
 
-    fun confirm(userId: Long): UserDto? {
+    fun confirm(userId: Long): User {
         return userRepository.confirm(userId)
     }
 
-    fun applySubscription(subId: Int, email: String): UserDto {
+    fun applySubscription(id: Int, email: String): User {
         val user = findByEmail(email)
-        return userRepository.updateSubscription(subId, user.id)
+        return userRepository.applySubscription(id, user.id)
     }
 }

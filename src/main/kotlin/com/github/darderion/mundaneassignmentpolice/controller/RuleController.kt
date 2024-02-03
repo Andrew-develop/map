@@ -1,5 +1,7 @@
 package com.github.darderion.mundaneassignmentpolice.controller
 
+import com.github.darderion.mundaneassignmentpolice.dtos.rule.RuleDto
+import com.github.darderion.mundaneassignmentpolice.dtos.rule.RuleResponse
 import com.github.darderion.mundaneassignmentpolice.services.RuleService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,6 +15,6 @@ class RuleController (
 ) {
     @GetMapping("/all")
     fun getAllRules(): ResponseEntity<*> {
-        return ResponseEntity.ok(ruleService.getAll())
+        return ResponseEntity.ok(RuleResponse(ruleService.getAll()))
     }
 }

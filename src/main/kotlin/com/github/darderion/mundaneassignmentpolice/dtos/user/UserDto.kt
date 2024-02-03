@@ -8,10 +8,10 @@ data class UserDto (
         val email: String,
         val subscriptionId: Int
 ) {
-        constructor(user: UserEntity): this(
-                user.id.value,
+        constructor(user: User): this(
+                user.id,
                 user.name,
                 user.email,
-                user.subscription.id.value
+                user.subscriptionId
         )
 }

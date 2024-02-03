@@ -9,6 +9,8 @@ class PresetEntity(id: EntityID<Long>): LongEntity(id) {
     companion object : LongEntityClass<PresetEntity>(PresetsTable)
 
     var name by PresetsTable.name
+    var owner by UserEntity optionalReferencedOn PresetsTable.ownerId
+
     var rules by RuleEntity via PresetsRulesTable
     var users by UserEntity via UsersPresetsTable
 }

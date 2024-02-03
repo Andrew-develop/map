@@ -1,10 +1,12 @@
 package com.github.darderion.mundaneassignmentpolice.services
 
-import com.github.darderion.mundaneassignmentpolice.dtos.RuleDto
 import com.github.darderion.mundaneassignmentpolice.repositories.RuleRepository
 import com.github.darderion.mundaneassignmentpolice.rules.*
 import org.springframework.stereotype.Service
 import com.github.darderion.mundaneassignmentpolice.checker.rule.Rule
+import com.github.darderion.mundaneassignmentpolice.dtos.rule.RuleDto
+import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
+import com.github.darderion.mundaneassignmentpolice.models.entities.RuleEntity
 
 @Service
 class RuleService (
@@ -14,9 +16,9 @@ class RuleService (
         return ruleRepository.findAll()
     }
 
-    fun findByPreset(id: Long): RuleSet {
+    fun convertToSet(rules: List<RuleDto>): RuleSet {
         return RuleSet(
-            ruleRepository.findByPreset(id).mapNotNull {
+            rules.mapNotNull {
                 getRuleBy(it.name)
             }
         )

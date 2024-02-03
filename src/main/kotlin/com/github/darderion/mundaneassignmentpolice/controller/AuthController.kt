@@ -20,22 +20,16 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/auth")
 class AuthController (
+        private val authenticationManager: AuthenticationManager,
+        private val jwtTokenUtils: JwtTokenUtils,
         private val userService: UserService,
         private val emailService: EmailService,
-        private val confirmationService: ConfirmationService,
-        private val jwtTokenUtils: JwtTokenUtils,
-        private val authenticationManager: AuthenticationManager
+        private val confirmationService: ConfirmationService
 ) {
     @PostMapping("/login")
     fun createAuthToken(@RequestBody authRequest: JwtRequest): ResponseEntity<*> {
-        try {
-            authenticationManager.authenticate(
-                    UsernamePasswordAuthenticationToken(authRequest.email, authRequest.password))
-        } catch (e: BadCredentialsException) {
-            return ResponseEntity(AppError(HttpStatus.UNAUTHORIZED.value(), "Неправильный email или пароль"), HttpStatus.UNAUTHORIZED)
-        }
-        val userDetails = userService.loadUserByUsername(authRequest.email)
-        val token = jwtTokenUtils.generateToken(userDetails)
+        val token = authenticateUser(authRequest)
+            ?: return ResponseEntity(AppError(HttpStatus.UNAUTHORIZED.value(), "Wrong email or password"), HttpStatus.UNAUTHORIZED)
         return ResponseEntity.ok(JwtResponse(token))
     }
 
@@ -43,39 +37,53 @@ class AuthController (
     fun createNewUser(@RequestBody request: UserRequest): ResponseEntity<*> {
         val user = userService.createNewUser(request)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "User already exist"), HttpStatus.BAD_REQUEST)
-        val confirm = confirmationService.prepareConfirmation(user.id)
+        val token = authenticateUser(JwtRequest(request.email, request.password))
+        val confirm = confirmationService.prepareConfirmation(user, token)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Something went wrong"), HttpStatus.BAD_REQUEST)
-//        emailService.sendCode(confirm, user.email, "email confirmation")
+        emailService.sendCode(confirm.code, user.email, "email confirmation")
         return ResponseEntity.ok(UUIDDto(confirm.id))
     }
 
     @PostMapping("/registration/confirm")
     fun confirmRegistration(@RequestBody request: ConfirmationRequest): ResponseEntity<*> {
-        val userId = confirmationService.confirm(request)
+        val confirmation = confirmationService.getConfirmation(request)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Incorrect code"), HttpStatus.BAD_REQUEST)
-        val user = userService.confirm(userId)
-                ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Something went wrong"), HttpStatus.BAD_REQUEST)
-        return ResponseEntity.ok(user)
+        userService.confirm(confirmation.userId)
+
+        return if (confirmation.token != null)
+            ResponseEntity.ok(JwtResponse(confirmation.token))
+        else ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Something went wrong"), HttpStatus.BAD_REQUEST)
     }
 
     @PostMapping("/reset-password")
     fun resetPassword(@RequestParam email: String): ResponseEntity<*> {
-        val userId = userService.getIdForResetPassword(email)
+        val user = userService.findForReset(email)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Email doesn't exist"), HttpStatus.BAD_REQUEST)
-        val confirm = confirmationService.prepareConfirmation(userId)
+        val confirm = confirmationService.prepareConfirmation(user)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Something went wrong"), HttpStatus.BAD_REQUEST)
-//        emailService.sendCode(confirm, email, "reset password")
+        emailService.sendCode(confirm.code, email, "reset password")
         return ResponseEntity.ok(UUIDDto(confirm.id))
     }
 
     @PostMapping("/reset-password/confirm")
     fun confirmReset(@RequestBody request: ConfirmationRequest): ResponseEntity<*> {
-        val userId = confirmationService.confirm(request)
+        val confirmation = confirmationService.getConfirmation(request)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Incorrect code"), HttpStatus.BAD_REQUEST)
         val password = request.password
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Incorrect password"), HttpStatus.BAD_REQUEST)
-        val user = userService.resetPassword(userId, password)
-                ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Something went wrong"), HttpStatus.BAD_REQUEST)
-        return ResponseEntity.ok(user)
+        val user = userService.resetPassword(confirmation.userId, password)
+        return createAuthToken(JwtRequest(user.email, password))
+    }
+
+    private fun authenticateUser(request: JwtRequest): String? {
+        try {
+            authenticationManager.authenticate(
+                    UsernamePasswordAuthenticationToken(request.email, request.password)
+            )
+        } catch (e: BadCredentialsException) {
+            return null
+        }
+        val userDetails = userService.loadUserByUsername(request.email)
+        return jwtTokenUtils.generateToken(userDetails)
     }
 }

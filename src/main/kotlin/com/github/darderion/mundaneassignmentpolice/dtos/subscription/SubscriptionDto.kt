@@ -1,4 +1,4 @@
-package com.github.darderion.mundaneassignmentpolice.dtos
+package com.github.darderion.mundaneassignmentpolice.dtos.subscription
 
 import com.github.darderion.mundaneassignmentpolice.models.entities.SubscriptionEntity
 

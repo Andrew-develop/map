@@ -7,7 +7,9 @@ create table rules (
 create table presets (
   id                    bigserial,
   name                  varchar(80) not null,
-  primary key (id)
+  owner_id              bigint,
+  primary key (id),
+  foreign key (owner_id) references users (id)
 );
 
 create table users_presets (

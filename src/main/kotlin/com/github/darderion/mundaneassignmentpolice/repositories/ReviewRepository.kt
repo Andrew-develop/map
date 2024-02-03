@@ -1,40 +1,45 @@
 package com.github.darderion.mundaneassignmentpolice.repositories
 
-import com.github.darderion.mundaneassignmentpolice.dtos.review.ReviewDto
+import com.github.darderion.mundaneassignmentpolice.dtos.review.Review
 import com.github.darderion.mundaneassignmentpolice.models.entities.PresetEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.ProjectEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.ReviewEntity
 import com.github.darderion.mundaneassignmentpolice.models.entities.UserEntity
 import com.github.darderion.mundaneassignmentpolice.models.tables.ReviewsTable
+import org.jetbrains.exposed.dao.load
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
 import java.time.Instant
 
 interface ReviewRepository {
-    fun findByIds(ids: List<Long>): List<ReviewDto>
-    fun findByUser(id: Long): List<ReviewDto>
-    fun findById(id: Long): ReviewDto?
-    fun insert(filepath: String, presetId: Long, projectId: Long?, userId: Long): ReviewDto
+    fun findByProject(id: Long): List<Review>
+    fun findByUser(id: Long): List<Review>
+    fun findById(id: Long): Review?
+    fun insert(filepath: String, presetId: Long, projectId: Long?, userId: Long): Review
     fun delete(id: Long): Unit
 }
 
 @Repository
 class ReviewRepositoryImpl: ReviewRepository {
-    override fun findByIds(ids: List<Long>): List<ReviewDto> = transaction {
-        ReviewEntity.forIds(ids).toList().map { ReviewDto(it) }
+    override fun findByProject(id: Long): List<Review> = transaction {
+        ReviewEntity.find { ReviewsTable.projectId eq id }.map { Review(it) }
     }
-    override fun findByUser(id: Long): List<ReviewDto> = transaction {
-        ReviewEntity.find { ReviewsTable.userId eq id }.toList().map { ReviewDto(it) }
-    }
-
-    override fun findById(id: Long): ReviewDto? = transaction {
-        ReviewEntity.findById(id)?.let { ReviewDto(it) }
+    override fun findByUser(id: Long): List<Review> = transaction {
+        ReviewEntity.find { ReviewsTable.userId eq id }.toList().map { Review(it) }
     }
 
-    override fun insert(filepath: String, presetId: Long, projectId: Long?, userId: Long): ReviewDto = transaction {
-        val userEntity = UserEntity.findById(userId) ?: throw NoSuchElementException("Error getting user. Statement result is null.")
-        val presetEntity = PresetEntity.findById(presetId) ?: throw NoSuchElementException("Error getting preset. Statement result is null.")
-        val projectEntity = ProjectEntity.findById(projectId ?: throw NoSuchElementException("Error getting preset. Statement result is null."))
+    override fun findById(id: Long): Review? = transaction {
+        ReviewEntity.findById(id)?.let { Review(it) }
+    }
+
+    override fun insert(filepath: String, presetId: Long, projectId: Long?, userId: Long): Review = transaction {
+        val userEntity = UserEntity.findById(userId)
+                ?: throw NoSuchElementException("Error getting user. Statement result is null.")
+        val presetEntity = PresetEntity.findById(presetId)
+                ?: throw NoSuchElementException("Error getting preset. Statement result is null.")
+        val projectEntity = ProjectEntity.findById(projectId
+                ?: throw NoSuchElementException("Error getting preset. Statement result is null."))
 
         ReviewEntity.new {
             this.filepath = filepath
@@ -42,7 +47,7 @@ class ReviewRepositoryImpl: ReviewRepository {
             this.preset = presetEntity
             this.user = userEntity
             this.project = projectEntity
-        }.let { ReviewDto(it) }
+        }.let { Review(it) }
     }
 
     override fun delete(id: Long): Unit = transaction {

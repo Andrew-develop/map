@@ -30,12 +30,11 @@ class SecurityConfig (
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
-//            .cors(withDefaults())
-            .cors { it.disable() }
+            .cors(withDefaults())
+//            .cors { it.disable() }
             .authorizeHttpRequests { authz ->
-                authz.antMatchers("/admin").hasRole("ADMIN")
                 authz.antMatchers("/auth/**").permitAll()
-//                authz.anyRequest().hasRole("USER")
+                authz.anyRequest().hasRole("USER")
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
