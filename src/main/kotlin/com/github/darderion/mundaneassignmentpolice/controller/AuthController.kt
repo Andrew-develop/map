@@ -61,7 +61,7 @@ class AuthController (
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Email doesn't exist"), HttpStatus.BAD_REQUEST)
         val confirm = confirmationService.prepareConfirmation(user)
                 ?: return ResponseEntity(AppError(HttpStatus.BAD_REQUEST.value(), "Something went wrong"), HttpStatus.BAD_REQUEST)
-        emailService.sendCode(confirm.code, email, "reset password")
+        emailService.sendCode(confirm.code, email, "reset password confirmation")
         return ResponseEntity.ok(UUIDDto(confirm.id))
     }
 
